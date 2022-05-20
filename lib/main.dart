@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:path/path.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,11 +32,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  var _tilesLoaded = false;
 
-  void _incrementCounter() {
+  @override
+  initState() {
+    super.initState();
+    _copyTilesIntoPlace();
+  }
+
+  _copyTilesIntoPlace() async {
+    await installOfflineMapTiles(join("assets", "cache.db"));
     setState(() {
-      _counter++;
+      _tilesLoaded = true;
     });
   }
 
@@ -43,24 +53,28 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: _tilesLoaded
+          ? const MapBox()
+          : const Center(
+              child: CircularProgressIndicator(),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+}
+
+class MapBox extends StatelessWidget {
+  const MapBox({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MapboxMap(
+      myLocationTrackingMode: MyLocationTrackingMode.Tracking,
+      accessToken: dotenv.env['MAPBOX_SECRET_KEY'],
+      initialCameraPosition: const CameraPosition(
+        zoom: 10,
+        target: LatLng(53.3473, 83.7850),
       ),
     );
   }
