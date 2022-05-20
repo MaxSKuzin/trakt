@@ -20,6 +20,7 @@ analyzer:
     avoid_positional_boolean_parameters: ignore
     body_might_complete_normally_nullable : ignore
     use_key_in_widget_constructors: ignore
+    depend_on_referenced_packages: ignore
 
 linter:
   rules:
