@@ -15,6 +15,8 @@ final appTheme = ThemeData(
     surface: whiteColor,
     onSurface: blackColor,
   ),
+  backgroundColor: backgroundColor,
+  primaryColor: primaryColor,
   textTheme: GoogleFonts.signikaTextTheme(),
 );
 

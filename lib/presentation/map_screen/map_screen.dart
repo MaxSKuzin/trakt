@@ -4,19 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
 
-import 'home_screen_wm.dart';
+import '../main_wrapper/main_wrapper.dart';
+import 'map_screen_wm.dart';
 
-class HomeScreen extends PmWidget<HomeWM, void> {
-  const HomeScreen({Key? key}) : super(HomeWMImpl.create);
+class MapScreen extends PmWidget<MapWM, void> {
+  const MapScreen({Key? key}) : super(MapWMImpl.create);
 
   @override
-  Widget build(HomeWM wm) {
+  Widget build(MapWM wm) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: wm.onLocationButtonTap,
-        child: const Icon(
-          Icons.gps_fixed_rounded,
-          size: 32,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: ClipOval(
+        child: Material(
+          color: wm.theme.colorScheme.background,
+          child: InkWell(
+            onTap: wm.onLocationButtonTap,
+            onDoubleTap: () => wm.onLocationButtonTap(true),
+            child: const Padding(
+              padding: EdgeInsets.all(10),
+              child: Icon(
+                Icons.gps_fixed_rounded,
+                size: 32,
+              ),
+            ),
+          ),
         ),
       ),
       body: ValueListenableBuilder<bool>(
@@ -28,7 +39,10 @@ class HomeScreen extends PmWidget<HomeWM, void> {
           accessToken: wm.accessToken,
           onMapCreated: wm.onMapCreated,
           compassViewMargins: Point(wm.screenSize.width - 50, wm.viewPadding.top),
-          logoViewMargins: Point(10, wm.viewPadding.bottom),
+          logoViewMargins: const Point(
+            10,
+            MainWrapper.bottomNavigationBarHeight + 50,
+          ),
           attributionButtonMargins: const Point(-10, -10),
           myLocationEnabled: true,
           annotationOrder: const [

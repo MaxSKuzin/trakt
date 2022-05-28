@@ -8,6 +8,7 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
+  animated_bottom_navigation_bar: ^0.3.3
   auto_route: ^4.0.1
   cached_network_image: ^3.2.1
   card_swiper: ^2.0.3
@@ -20,6 +21,7 @@ dependencies:
     sdk: flutter
   flutter_cache_manager: ^3.3.0
   flutter_dotenv: ^5.0.2
+  font_awesome_flutter: ^10.1.0
   freezed_annotation: ^2.0.3
   geolocator: ^8.2.1
   get_it: ^7.2.0

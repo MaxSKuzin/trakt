@@ -11,7 +11,7 @@ import '../../domain/service/geo_objects_service.dart';
 import '../../injection.dart';
 import '../../logger.dart';
 
-class HomeWMImpl extends WidgetModel implements HomeWM {
+class MapWMImpl extends WidgetModel implements MapWM {
   static const minZoomForUserLocation = 15.0;
   static const symbolDataKey = 'data';
 
@@ -21,11 +21,11 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
 
   late MapboxMapController _controller;
 
-  factory HomeWMImpl.create(BuildContext context) {
-    return HomeWMImpl._(getIt.get<GeoObjectsService>());
+  factory MapWMImpl.create(BuildContext context) {
+    return MapWMImpl._(getIt.get<GeoObjectsService>());
   }
 
-  HomeWMImpl._(this._geoObjectsService);
+  MapWMImpl._(this._geoObjectsService);
 
   @override
   void initWidgetModel() {
@@ -101,7 +101,7 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
   }
 
   @override
-  Future<void> onLocationButtonTap() async {
+  Future<void> onLocationButtonTap([bool doubleTapped = false]) async {
     if (!_isInitialized) {
       return;
     }
@@ -111,7 +111,7 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
       await _controller.animateCamera(
         CameraUpdate.newLatLngZoom(
           userLocation,
-          zoom < minZoomForUserLocation ? minZoomForUserLocation : zoom,
+          zoom < minZoomForUserLocation || doubleTapped ? minZoomForUserLocation : zoom,
         ),
       );
     }
@@ -121,10 +121,13 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
   EdgeInsets get viewPadding => MediaQuery.of(context).viewPadding;
 
   @override
+  EdgeInsets get viewInsets => MediaQuery.of(context).viewInsets;
+
+  @override
   Size get screenSize => MediaQuery.of(context).size;
 }
 
-abstract class HomeWM implements IWidgetModel {
+abstract class MapWM implements IWidgetModel {
   void onMapCreated(MapboxMapController controller);
 
   String get accessToken;
@@ -133,9 +136,11 @@ abstract class HomeWM implements IWidgetModel {
 
   void onStyleCreated();
 
-  Future<void> onLocationButtonTap();
+  Future<void> onLocationButtonTap([bool doubleTapped = false]);
 
   EdgeInsets get viewPadding;
+
+  EdgeInsets get viewInsets;
 
   Size get screenSize;
 }
