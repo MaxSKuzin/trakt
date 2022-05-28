@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'widget/geo_object_modal.dart';
 
 import '../../domain/entity/geo_object.dart';
 import '../../domain/service/geo_objects_service.dart';
@@ -12,8 +12,12 @@ import '../../injection.dart';
 import '../../logger.dart';
 
 class HomeWMImpl extends WidgetModel implements HomeWM {
+  static const minZoomForUserLocation = 15.0;
+  static const symbolDataKey = 'data';
+
   final GeoObjectsService _geoObjectsService;
   final _tilesLoaded = ValueNotifier(false);
+  bool _isInitialized = false;
 
   late MapboxMapController _controller;
 
@@ -45,17 +49,18 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
 
   @override
   void onMapCreated(MapboxMapController controller) {
+    _isInitialized = true;
     _controller = controller;
     _controller.setMapLanguage('ru');
     _controller.onSymbolTapped.add(
       (symbol) async {
+        final item = symbol.data?[symbolDataKey] as GeoObject?;
+        if (item == null) {
+          return;
+        }
         showBarModalBottomSheet(
           context: context,
-          builder: (context) => SafeArea(
-            child: Container(
-              height: 100,
-            ),
-          ),
+          builder: (context) => GeoObjectModal(item: item),
         );
       },
     );
@@ -81,6 +86,9 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
           geometry: item.position,
           textField: item.title,
         ),
+        {
+          symbolDataKey: item,
+        },
       );
     }
   }
@@ -91,6 +99,29 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
       _geoObjectsService.objectsStream.listen(_objectsListener);
     }
   }
+
+  @override
+  Future<void> onLocationButtonTap() async {
+    if (!_isInitialized) {
+      return;
+    }
+    final userLocation = await _controller.requestMyLocationLatLng();
+    final zoom = _controller.cameraPosition?.zoom ?? minZoomForUserLocation;
+    if (userLocation != null) {
+      await _controller.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          userLocation,
+          zoom < minZoomForUserLocation ? minZoomForUserLocation : zoom,
+        ),
+      );
+    }
+  }
+
+  @override
+  EdgeInsets get viewPadding => MediaQuery.of(context).viewPadding;
+
+  @override
+  Size get screenSize => MediaQuery.of(context).size;
 }
 
 abstract class HomeWM implements IWidgetModel {
@@ -101,4 +132,10 @@ abstract class HomeWM implements IWidgetModel {
   ValueListenable<bool> get tilesLoaded;
 
   void onStyleCreated();
+
+  Future<void> onLocationButtonTap();
+
+  EdgeInsets get viewPadding;
+
+  Size get screenSize;
 }
