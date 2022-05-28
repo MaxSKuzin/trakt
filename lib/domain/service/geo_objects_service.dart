@@ -18,8 +18,9 @@ class GeoObjectsService extends PmService {
   Future<void> loadObjects() async {
     try {
       await _geoObjectsRepository.loadObjects();
-    } catch (err) {
-      handleError(err);
+    } catch (err, st) {
+      handleError(err, st);
+      rethrow;
     }
   }
 }

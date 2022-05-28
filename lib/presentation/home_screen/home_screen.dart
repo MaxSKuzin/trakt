@@ -18,6 +18,7 @@ class HomeScreen extends PmWidget<HomeWM, void> {
           myLocationTrackingMode: MyLocationTrackingMode.Tracking,
           accessToken: wm.accessToken,
           onMapCreated: wm.onMapCreated,
+          
           annotationOrder: const [
             AnnotationType.symbol,
           ],

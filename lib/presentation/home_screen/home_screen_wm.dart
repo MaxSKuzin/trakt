@@ -45,7 +45,8 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
   @override
   void onMapCreated(MapboxMapController controller) {
     _controller = controller;
-    if (controller.symbolManager != null) {
+    _controller.setMapLanguage('ru');
+    if (_controller.symbolManager != null) {
       _geoObjectsService.objectsStream.listen(_objectsListener);
     }
   }
@@ -55,10 +56,12 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
 
   void _objectsListener(List<GeoObject> items) {
     for (var item in items) {
-      _controller.addSymbol(SymbolOptions(
-        geometry: item.position,
-        textField: item.title,
-      ));
+      _controller.addSymbol(
+        SymbolOptions(
+          geometry: item.position,
+          textField: item.title,
+        ),
+      );
     }
   }
 
