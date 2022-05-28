@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:path/path.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../domain/entity/geo_object.dart';
 import '../../domain/service/geo_objects_service.dart';
@@ -32,7 +33,7 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
 
   Future<void> _loadTiles() async {
     try {
-      await installOfflineMapTiles(join("assets", "cache.db"));
+      await installOfflineMapTiles("assets/cache.db");
       _tilesLoaded.value = true;
     } catch (err) {
       logger.e(err);
@@ -46,6 +47,18 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
   void onMapCreated(MapboxMapController controller) {
     _controller = controller;
     _controller.setMapLanguage('ru');
+    _controller.onSymbolTapped.add(
+      (symbol) async {
+        showBarModalBottomSheet(
+          context: context,
+          builder: (context) => SafeArea(
+            child: Container(
+              height: 100,
+            ),
+          ),
+        );
+      },
+    );
     if (_controller.symbolManager != null) {
       _geoObjectsService.objectsStream.listen(_objectsListener);
     }
@@ -54,10 +67,17 @@ class HomeWMImpl extends WidgetModel implements HomeWM {
   @override
   ValueListenable<bool> get tilesLoaded => _tilesLoaded;
 
-  void _objectsListener(List<GeoObject> items) {
+  Future<void> _objectsListener(List<GeoObject> items) async {
     for (var item in items) {
+      final file = await _geoObjectsService.getFile(
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/2214px-How_to_use_icon.svg.png');
+      final data = await file.readAsBytes();
+      _controller.addImage('filePath', data);
       _controller.addSymbol(
         SymbolOptions(
+          iconOffset: const Offset(0, -550),
+          iconImage: 'filePath',
+          iconSize: 0.05,
           geometry: item.position,
           textField: item.title,
         ),

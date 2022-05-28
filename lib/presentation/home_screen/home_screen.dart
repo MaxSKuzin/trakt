@@ -11,6 +11,9 @@ class HomeScreen extends PmWidget<HomeWM, void> {
   Widget build(HomeWM wm) {
     return Scaffold(
       appBar: AppBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+      ),
       body: ValueListenableBuilder<bool>(
         valueListenable: wm.tilesLoaded,
         builder: (_, value, child) => value ? child! : const CircularProgressIndicator(),
@@ -18,7 +21,6 @@ class HomeScreen extends PmWidget<HomeWM, void> {
           myLocationTrackingMode: MyLocationTrackingMode.Tracking,
           accessToken: wm.accessToken,
           onMapCreated: wm.onMapCreated,
-          
           annotationOrder: const [
             AnnotationType.symbol,
           ],
