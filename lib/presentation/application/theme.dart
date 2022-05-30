@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final appTheme = ThemeData(
+  appBarTheme: const AppBarTheme(
+    toolbarHeight: 40,
+  ),
   colorScheme: const ColorScheme(
     brightness: Brightness.light,
     primary: primaryColor,

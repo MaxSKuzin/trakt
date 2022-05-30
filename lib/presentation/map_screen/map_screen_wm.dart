@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,6 +20,7 @@ class MapWMImpl extends WidgetModel implements MapWM {
   final GeoObjectsService _geoObjectsService;
   final _tilesLoaded = ValueNotifier(false);
   bool _isInitialized = false;
+  late StreamSubscription _objectsSubscription;
 
   late MapboxMapController _controller;
 
@@ -45,6 +48,13 @@ class MapWMImpl extends WidgetModel implements MapWM {
   }
 
   @override
+  void dispose() {
+    _objectsSubscription.cancel();
+
+    super.dispose();
+  }
+
+  @override
   String get accessToken => dotenv.env['MAPBOX_SECRET_KEY']!;
 
   @override
@@ -65,7 +75,7 @@ class MapWMImpl extends WidgetModel implements MapWM {
       },
     );
     if (_controller.symbolManager != null) {
-      _geoObjectsService.objectsStream.listen(_objectsListener);
+      _objectsSubscription = _geoObjectsService.objectsStream.listen(_objectsListener);
     }
   }
 
@@ -96,7 +106,7 @@ class MapWMImpl extends WidgetModel implements MapWM {
   @override
   void onStyleCreated() {
     if (_controller.symbolManager != null) {
-      _geoObjectsService.objectsStream.listen(_objectsListener);
+      _objectsSubscription = _geoObjectsService.objectsStream.listen(_objectsListener);
     }
   }
 

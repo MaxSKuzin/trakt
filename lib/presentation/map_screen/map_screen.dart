@@ -23,7 +23,7 @@ class MapScreen extends PmWidget<MapWM, void> {
             child: const Padding(
               padding: EdgeInsets.all(10),
               child: Icon(
-                Icons.gps_fixed_rounded,
+                Icons.near_me_rounded,
                 size: 32,
               ),
             ),

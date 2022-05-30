@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../router.gr.dart';
 import 'theme.dart';
@@ -16,6 +17,7 @@ class _ApplicationState extends State<Application> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return MaterialApp.router(
       routeInformationParser: _appRouter.defaultRouteParser(),
       routerDelegate: AutoRouterDelegate(
