@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
@@ -51,10 +52,14 @@ class GeoObjectsListWMImpl extends WidgetModel implements GeoObjectsListWM {
   @override
   Future<void> onCardTap(int index) => showBarModalBottomSheet(
         context: context,
-        builder: (context) => GeoObjectModal(
+        builder: (modalContext) => GeoObjectModal(
           item: getItem(
             index,
           ),
+          onLatLngTap: () async {
+            await modalContext.router.pop();
+            context.tabsRouter.setActiveIndex(0);
+          },
         ),
       );
 }

@@ -6,10 +6,12 @@ import '../../design/cached_swiper.dart';
 
 class GeoObjectModal extends StatelessWidget {
   final GeoObject item;
+  final Function()? onLatLngTap;
 
   const GeoObjectModal({
     Key? key,
     required this.item,
+    required this.onLatLngTap,
   }) : super(key: key);
 
   @override
@@ -59,6 +61,25 @@ class GeoObjectModal extends StatelessWidget {
                   height: MediaQuery.of(context).size.width - 30,
                   width: MediaQuery.of(context).size.width - 30,
                   borderRadius: BorderRadius.circular(8),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TextButton(
+                    onPressed: onLatLngTap,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                        ),
+                        Text(
+                            '${item.position.latitude.toStringAsFixed(2)} ${item.position.longitude.toStringAsFixed(2)}'),
+                      ],
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 15,

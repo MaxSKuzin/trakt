@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 import 'widget/geo_object_modal.dart';
 
 import '../../domain/entity/geo_object.dart';
@@ -70,7 +71,10 @@ class MapWMImpl extends WidgetModel implements MapWM {
         }
         showBarModalBottomSheet(
           context: context,
-          builder: (context) => GeoObjectModal(item: item),
+          builder: (context) => GeoObjectModal(
+            item: item,
+            onLatLngTap: null,
+          ),
         );
       },
     );
@@ -84,15 +88,15 @@ class MapWMImpl extends WidgetModel implements MapWM {
 
   Future<void> _objectsListener(List<GeoObject> items) async {
     for (var item in items) {
-      final file = await _geoObjectsService.getFile(
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/How_to_use_icon.svg/2214px-How_to_use_icon.svg.png');
-      final data = await file.readAsBytes();
+      final fileMountain = await _geoObjectsService.getFile(
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Mountain_Icon.svg/1200px-Mountain_Icon.svg.png');
+      final data = await fileMountain.readAsBytes();
       _controller.addImage('filePath', data);
       _controller.addSymbol(
         SymbolOptions(
           iconOffset: const Offset(0, -550),
           iconImage: 'filePath',
-          iconSize: 0.05,
+          iconSize: 0.1,
           geometry: item.position,
           textField: item.title,
         ),
