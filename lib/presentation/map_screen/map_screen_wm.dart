@@ -7,6 +7,7 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import '../../generated/assets.gen.dart';
 import 'widget/geo_object_modal.dart';
 
 import '../../domain/entity/geo_object.dart';
@@ -41,7 +42,7 @@ class MapWMImpl extends WidgetModel implements MapWM {
 
   Future<void> _loadTiles() async {
     try {
-      await installOfflineMapTiles("assets/cache.db");
+      await installOfflineMapTiles(Assets.caches.cache);
       _tilesLoaded.value = true;
     } catch (err) {
       logger.e(err);

@@ -19,6 +19,7 @@ dependencies:
   fading_edge_scrollview: ^2.0.1
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.0.1
   flutter_cache_manager: ^3.3.0
   flutter_dotenv: ^5.0.2
   flutter_native_splash: ^2.2.4
@@ -54,7 +55,8 @@ flutter_gen:
 flutter:
   uses-material-design: true
   assets:
-    - assets/cache.db
+    - assets/images/
+    - assets/caches/
     - .env
 
 flutter_native_splash:
