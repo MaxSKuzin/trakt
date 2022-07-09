@@ -21,6 +21,7 @@ dependencies:
     sdk: flutter
   flutter_cache_manager: ^3.3.0
   flutter_dotenv: ^5.0.2
+  flutter_native_splash: ^2.2.4
   font_awesome_flutter: ^10.1.0
   freezed_annotation: ^2.0.3
   geolocator: ^8.2.1
@@ -55,3 +56,9 @@ flutter:
   assets:
     - assets/cache.db
     - .env
+
+flutter_native_splash:
+  color: "ffffff"
+  image: "assets/images/splash.png"
+  android_gravity: fill
+  ios_content_mode: scaleAspectFill

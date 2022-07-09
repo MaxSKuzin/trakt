@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../router.gr.dart';
-import 'theme.dart';
 
 class Application extends StatefulWidget {
   const Application({Key? key}) : super(key: key);
@@ -27,7 +26,6 @@ class _ApplicationState extends State<Application> {
         ],
       ),
       debugShowCheckedModeBanner: false,
-      theme: appTheme,
     );
   }
 }
