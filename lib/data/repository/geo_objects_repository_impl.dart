@@ -1,17 +1,14 @@
 import 'package:injectable/injectable.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:rxdart/subjects.dart';
 
 import '../../domain/entity/geo_object.dart';
 import '../../domain/repository/geo_objects_repository.dart';
 
 @LazySingleton(as: GeoObjectsRepository)
 class GeoObjectsRepositoryImpl implements GeoObjectsRepository {
-  final _geoObjectsSubject = BehaviorSubject.seeded(<GeoObject>[]);
-
   @override
-  Future<void> loadObjects() async {
-    _geoObjectsSubject.add([
+  Future<List<GeoObject>> getObjects() async {
+    return [
       const GeoObject.monument(
         images: [
           'https://www.russiadiscovery.ru/upload/files/files/Kavkazskie_gory.jpg',
@@ -21,12 +18,16 @@ class GeoObjectsRepositoryImpl implements GeoObjectsRepository {
         position: LatLng(53.3473, 83.5850),
         title: 'Monument 1',
         description: 'Monument 1 description',
+        mapIconUrl:
+            'https://w7.pngwing.com/pngs/393/606/png-transparent-computer-icons-mountain-mountain-angle-white-text.png',
       ),
       const GeoObject.monument(
         images: [],
         position: LatLng(53.5473, 83.7850),
         title: 'Monument 2',
         description: 'Monument 2 description',
+        mapIconUrl:
+            'https://w7.pngwing.com/pngs/393/606/png-transparent-computer-icons-mountain-mountain-angle-white-text.png',
       ),
       const GeoObject.mountain(
         images: [
@@ -38,6 +39,8 @@ class GeoObjectsRepositoryImpl implements GeoObjectsRepository {
         title: 'Mountain 1',
         description:
             'Mountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 descriptionMountain 1 description',
+        mapIconUrl:
+            'https://w7.pngwing.com/pngs/393/606/png-transparent-computer-icons-mountain-mountain-angle-white-text.png',
       ),
       const GeoObject.mountain(
         images: [
@@ -48,10 +51,9 @@ class GeoObjectsRepositoryImpl implements GeoObjectsRepository {
         position: LatLng(53.3473, 84.0),
         title: 'Mountain 2',
         description: 'Mountain 2 description',
+        mapIconUrl:
+            'https://w7.pngwing.com/pngs/393/606/png-transparent-computer-icons-mountain-mountain-angle-white-text.png',
       ),
-    ]);
+    ];
   }
-
-  @override
-  Stream<List<GeoObject>> get objectsStream => _geoObjectsSubject.stream.distinct().asBroadcastStream();
 }

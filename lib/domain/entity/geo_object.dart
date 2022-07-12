@@ -10,6 +10,7 @@ class GeoObject with _$GeoObject {
     required LatLng position,
     required String title,
     required String description,
+    required String mapIconUrl,
     DateTime? dateOfCreation,
   }) = Monument;
 
@@ -18,5 +19,6 @@ class GeoObject with _$GeoObject {
     required LatLng position,
     required String title,
     required String description,
+    required String mapIconUrl,
   }) = Mountain;
 }

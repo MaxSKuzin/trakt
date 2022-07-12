@@ -7,35 +7,36 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import '../../domain/cubit/cache_cubit.dart';
+import '../../domain/cubit/cubit_extension.dart';
+import '../../injection.dart';
+import '../../domain/cubit/geo_objects_cubit.dart';
 import '../../generated/assets.gen.dart';
 import 'widget/geo_object_modal.dart';
 
 import '../../domain/entity/geo_object.dart';
-import '../../domain/service/geo_objects_service.dart';
-import '../../injection.dart';
 import '../../logger.dart';
 
 class MapWMImpl extends WidgetModel implements MapWM {
   static const minZoomForUserLocation = 15.0;
   static const symbolDataKey = 'data';
 
-  final GeoObjectsService _geoObjectsService;
+  final GeoObjectsCubit _geoObjectsCubit;
   final _tilesLoaded = ValueNotifier(false);
   bool _isInitialized = false;
-  late StreamSubscription _objectsSubscription;
+  late StreamSubscription<GeoObjectsState> _objectsSubscription;
 
   late MapboxMapController _controller;
 
   factory MapWMImpl.create(BuildContext context) {
-    return MapWMImpl._(getIt.get<GeoObjectsService>());
+    return MapWMImpl._(context.read<GeoObjectsCubit>());
   }
 
-  MapWMImpl._(this._geoObjectsService);
+  MapWMImpl._(this._geoObjectsCubit);
 
   @override
   void initWidgetModel() {
     _loadTiles();
-    _geoObjectsService.loadObjects();
 
     super.initWidgetModel();
   }
@@ -80,38 +81,48 @@ class MapWMImpl extends WidgetModel implements MapWM {
       },
     );
     if (_controller.symbolManager != null) {
-      _objectsSubscription = _geoObjectsService.objectsStream.listen(_objectsListener);
+      _objectsSubscription = _geoObjectsCubit.listenStateAsSubject(_addObjectsOnMap);
     }
   }
 
   @override
   ValueListenable<bool> get tilesLoaded => _tilesLoaded;
 
-  Future<void> _objectsListener(List<GeoObject> items) async {
-    for (var item in items) {
-      final fileMountain = await _geoObjectsService.getFile(
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Mountain_Icon.svg/1200px-Mountain_Icon.svg.png');
-      final data = await fileMountain.readAsBytes();
-      _controller.addImage('filePath', data);
-      _controller.addSymbol(
-        SymbolOptions(
-          iconOffset: const Offset(0, -550),
-          iconImage: 'filePath',
-          iconSize: 0.1,
-          geometry: item.position,
-          textField: item.title,
-        ),
-        {
-          symbolDataKey: item,
-        },
-      );
-    }
+  Future<void> _addObjectsOnMap(GeoObjectsState state) async {
+    state.maybeWhen(
+      ready: (items) async {
+        for (var item in items) {
+          final fileCubit = getIt.get<FileCubit>();
+          await fileCubit.getFile(item.mapIconUrl);
+          final fileMountain = fileCubit.state;
+          if (fileMountain == null) {
+            return;
+          }
+          final data = await fileMountain.readAsBytes();
+          _controller.addImage('filePath', data);
+          _controller.addSymbol(
+            SymbolOptions(
+              iconOffset: const Offset(0, -550),
+              iconImage: 'filePath',
+              iconSize: 0.1,
+              geometry: item.position,
+              textField: item.title,
+            ),
+            {
+              symbolDataKey: item,
+            },
+          );
+        }
+      },
+      orElse: () => null,
+    );
   }
 
   @override
   void onStyleCreated() {
     if (_controller.symbolManager != null) {
-      _objectsSubscription = _geoObjectsService.objectsStream.listen(_objectsListener);
+      _addObjectsOnMap(_geoObjectsCubit.state);
+      _objectsSubscription = _geoObjectsCubit.listenStateAsSubject(_addObjectsOnMap);
     }
   }
 
