@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../domain/cubit/geo_objects_cubit.dart';
 
 import '../../injection.dart';
-import '../router.gr.dart';
+import '../router.gen.dart';
 
 class MainWrapper extends StatefulWidget {
   static const bottomNavigationBarHeight = 40.0;

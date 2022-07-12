@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
-import '../router.gr.dart';
+import '../router.gen.dart';
 
 class SplashScreenWMImpl extends WidgetModel implements SplashScreenWM {
   factory SplashScreenWMImpl.create(BuildContext context) {

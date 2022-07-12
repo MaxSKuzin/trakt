@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../router.gr.dart';
+import '../router.gen.dart';
 
 class Application extends StatefulWidget {
   const Application({Key? key}) : super(key: key);
