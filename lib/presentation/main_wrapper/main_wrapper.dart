@@ -3,14 +3,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../domain/cubit/favorite_cubit.dart';
 import '../../domain/cubit/geo_objects_cubit.dart';
 
 import '../../injection.dart';
 import '../router.gen.dart';
 
 class MainWrapper extends StatefulWidget {
-  static const bottomNavigationBarHeight = 40.0;
-
   const MainWrapper({Key? key}) : super(key: key);
 
   @override
@@ -19,25 +18,31 @@ class MainWrapper extends StatefulWidget {
 
 class _MainWrapperState extends State<MainWrapper> {
   final _geoObjectsCubit = getIt.get<GeoObjectsCubit>()..loadObjects();
+  final _favoriteGeoObjectsCubit = getIt.get<FavoriteObjectsCubit>();
+  final routes = [
+    const MapScreenRoute(),
+    const GeoObjectsListScreenScreenRoute(),
+    const FavoritesScreenRoute(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _geoObjectsCubit,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: _geoObjectsCubit,
+        ),
+        BlocProvider.value(
+          value: _favoriteGeoObjectsCubit,
+        ),
+      ],
       child: AutoTabsScaffold(
-        routes: const [
-          MapScreenRoute(),
-          GeoObjectsListScreenScreenRoute(),
-        ],
-        extendBody: true,
+        routes: routes,
         bottomNavigationBuilder: (_, tabsRouter) => AnimatedBottomNavigationBar.builder(
-          height: MainWrapper.bottomNavigationBarHeight,
-          gapLocation: GapLocation.none,
-          leftCornerRadius: 20,
-          rightCornerRadius: 20,
-          splashRadius: 0,
+          height: kBottomNavigationBarHeight,
           backgroundColor: Theme.of(context).colorScheme.secondary,
-          itemCount: 2,
+          itemCount: routes.length,
+          gapLocation: GapLocation.none,
           tabBuilder: (index, isActive) => _bottomNavItem(index: index, isActive: isActive),
           activeIndex: tabsRouter.activeIndex,
           onTap: (index) => tabsRouter.setActiveIndex(index),
@@ -50,13 +55,11 @@ class _MainWrapperState extends State<MainWrapper> {
     final menuItems = [
       Icons.map_outlined,
       Icons.list_alt_rounded,
+      Icons.favorite_rounded,
     ];
 
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.only(
-        top: 10,
-      ),
       child: FaIcon(
         menuItems[index],
         color: isActive ? Colors.white : Colors.white.withOpacity(0.4),

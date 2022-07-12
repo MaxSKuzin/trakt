@@ -1,17 +1,22 @@
+import 'package:collection/collection.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/cubit/favorite_cubit.dart';
 
-import '../../../domain/entity/geo_object.dart';
-import '../../design/cached_swiper.dart';
+import '../../domain/entity/geo_object.dart';
+import 'cached_swiper.dart';
 
-class GeoObjectModal extends StatelessWidget {
+class GeoObjectModalWidget extends StatelessWidget {
+  final FavoriteObjectsCubit favoriteObjectsCubit;
   final GeoObject item;
   final Function()? onLatLngTap;
 
-  const GeoObjectModal({
+  const GeoObjectModalWidget({
     Key? key,
     required this.item,
     required this.onLatLngTap,
+    required this.favoriteObjectsCubit,
   }) : super(key: key);
 
   @override
@@ -49,6 +54,29 @@ class GeoObjectModal extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Center(
+                  child: BlocBuilder<FavoriteObjectsCubit, FavoriteObjectsState>(
+                    bloc: favoriteObjectsCubit,
+                    builder: (context, state) {
+                      final isFavorite = state.items.firstWhereOrNull((element) => item.id == element.id) != null;
+                      return IconButton(
+                        key: Key('${item.hashCode}'),
+                        onPressed: () => isFavorite
+                            ? favoriteObjectsCubit.removeFromFavorites(item)
+                            : favoriteObjectsCubit.addToFavorites(item),
+                        icon: AnimatedSwitcher(
+                          duration: const Duration(
+                            milliseconds: 300,
+                          ),
+                          child: Icon(
+                            isFavorite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+                            color: Theme.of(context).errorColor,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
                 Text(
                   item.title,
                   style: Theme.of(context).textTheme.headline5,

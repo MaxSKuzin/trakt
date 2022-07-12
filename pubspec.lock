@@ -791,10 +791,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "66ef030102a386ba33293e8033f9e6fe2018ed15"
+      resolved-ref: b77bbfc80917f530856370537fe1413228a99c8c
       url: "https://git.pmobi.tech/plugins/pmobi_mwwm.git"
     source: git
-    version: "0.0.2"
+    version: "0.0.4"
   pool:
     dependency: transitive
     description:

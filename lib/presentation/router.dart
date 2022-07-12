@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'favorites_screen/favorites_screen.dart';
 import 'splash_screen/splash_screen.dart';
 
 import 'geo_objects_list_screen/geo_objects_list_screen.dart';
@@ -22,6 +23,9 @@ import 'map_screen/map_screen.dart';
         ),
         AdaptiveRoute(
           page: GeoObjectsListScreenScreen,
+        ),
+        AdaptiveRoute(
+          page: FavoritesScreen,
         ),
       ],
     ),

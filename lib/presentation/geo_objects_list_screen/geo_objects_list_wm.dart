@@ -5,23 +5,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
+import '../../domain/cubit/favorite_cubit.dart';
 
 import '../../domain/cubit/cubit_extension.dart';
 import '../../domain/cubit/geo_objects_cubit.dart';
 import '../../domain/entity/geo_object.dart';
-import '../map_screen/widget/geo_object_modal.dart';
+import '../design/geo_object_modal_widget.dart';
 
 class GeoObjectsListWMImpl extends WidgetModel implements GeoObjectsListWM {
   final GeoObjectsCubit _geoObjectsCubit;
+  final FavoriteObjectsCubit _favoriteObjectsCubit;
   final _key = GlobalKey<AnimatedListState>();
   final _items = <GeoObject>[];
   late final StreamSubscription _ojectsSubscription;
 
   factory GeoObjectsListWMImpl.create(BuildContext context) {
-    return GeoObjectsListWMImpl._(context.read<GeoObjectsCubit>());
+    return GeoObjectsListWMImpl._(
+      context.read<GeoObjectsCubit>(),
+      context.read<FavoriteObjectsCubit>(),
+    );
   }
 
-  GeoObjectsListWMImpl._(this._geoObjectsCubit);
+  GeoObjectsListWMImpl._(
+    this._geoObjectsCubit,
+    this._favoriteObjectsCubit,
+  );
 
   @override
   void initWidgetModel() {
@@ -60,7 +68,8 @@ class GeoObjectsListWMImpl extends WidgetModel implements GeoObjectsListWM {
   @override
   Future<void> onCardTap(int index) => showBarModalBottomSheet(
         context: context,
-        builder: (modalContext) => GeoObjectModal(
+        builder: (modalContext) => GeoObjectModalWidget(
+          favoriteObjectsCubit: _favoriteObjectsCubit,
           item: getItem(
             index,
           ),

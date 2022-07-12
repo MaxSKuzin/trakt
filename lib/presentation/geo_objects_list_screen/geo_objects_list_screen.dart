@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
 
 import '../design/cached_swiper.dart';
-import '../main_wrapper/main_wrapper.dart';
 import 'geo_objects_list_wm.dart';
 
 class GeoObjectsListScreenScreen extends PmWidget<GeoObjectsListWM, void> {
@@ -15,7 +14,7 @@ class GeoObjectsListScreenScreen extends PmWidget<GeoObjectsListWM, void> {
       body: AnimatedList(
         key: wm.listKey,
         padding: const EdgeInsets.only(
-          bottom: MainWrapper.bottomNavigationBarHeight + 50,
+          bottom: 10,
           top: 10,
         ),
         itemBuilder: (_, index, animation) {
@@ -55,6 +54,7 @@ class GeoObjectsListScreenScreen extends PmWidget<GeoObjectsListWM, void> {
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               item.title,

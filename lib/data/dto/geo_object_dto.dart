@@ -11,23 +11,25 @@ part 'geo_object_dto.g.dart';
 class GeoObjectDto with _$GeoObjectDto {
   @HiveType(typeId: 1)
   const factory GeoObjectDto.monument({
-    @HiveField(0) required List<String> images,
-    @HiveField(1) required double latitude,
-    @HiveField(2) required double longitude,
-    @HiveField(3) required String title,
-    @HiveField(4) required String description,
-    @HiveField(5) required String mapIconUrl,
-    @HiveField(6) DateTime? dateOfCreation,
+    @HiveField(0) required String id,
+    @HiveField(1) required List<String> images,
+    @HiveField(2) required double latitude,
+    @HiveField(3) required double longitude,
+    @HiveField(4) required String title,
+    @HiveField(5) required String description,
+    @HiveField(6) required String mapIconUrl,
+    @HiveField(7) DateTime? dateOfCreation,
   }) = _MonumentDto;
 
   @HiveType(typeId: 2)
   const factory GeoObjectDto.mountain({
-    @HiveField(0) required List<String> images,
-    @HiveField(1) required double latitude,
-    @HiveField(2) required double longitude,
-    @HiveField(3) required String title,
-    @HiveField(4) required String description,
-    @HiveField(5) required String mapIconUrl,
+    @HiveField(0) required String id,
+    @HiveField(1) required List<String> images,
+    @HiveField(2) required double latitude,
+    @HiveField(3) required double longitude,
+    @HiveField(4) required String title,
+    @HiveField(5) required String description,
+    @HiveField(6) required String mapIconUrl,
   }) = _MountainDto;
 
   const GeoObjectDto._();
@@ -36,6 +38,7 @@ class GeoObjectDto with _$GeoObjectDto {
 
   factory GeoObjectDto.fromDomain(GeoObject object) => object.map(
         monument: (value) => GeoObjectDto.monument(
+          id: value.id,
           images: value.images,
           latitude: value.position.latitude,
           longitude: value.position.latitude,
@@ -45,6 +48,7 @@ class GeoObjectDto with _$GeoObjectDto {
           dateOfCreation: value.dateOfCreation,
         ),
         mountain: (value) => GeoObjectDto.mountain(
+          id: value.id,
           images: value.images,
           latitude: value.position.latitude,
           longitude: value.position.latitude,
@@ -56,6 +60,7 @@ class GeoObjectDto with _$GeoObjectDto {
 
   GeoObject toDomain() => map(
         monument: (value) => GeoObject.monument(
+          id: value.id,
           images: value.images,
           position: LatLng(
             value.latitude,
@@ -67,6 +72,7 @@ class GeoObjectDto with _$GeoObjectDto {
           dateOfCreation: value.dateOfCreation,
         ),
         mountain: (value) => GeoObject.mountain(
+          id: value.id,
           images: value.images,
           position: LatLng(
             value.latitude,

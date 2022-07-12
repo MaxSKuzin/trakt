@@ -35,10 +35,17 @@ class HiveSource {
     return _favoritesObjectsBox.values.toList();
   }
 
-  Stream<List<GeoObjectDto>> get favoritesObjectsListenable => _favoritesOnjectsSubject.asBroadcastStream();
+  Stream<List<GeoObjectDto>> get favoritesObjectsListenable {
+    _favoritesOnjectsSubject.add(_favoritesObjectsBox.values.toList());
+    return _favoritesOnjectsSubject.asBroadcastStream();
+  }
 
   Future<void> addObjectToFavorites(GeoObjectDto object) async {
-    await _favoritesObjectsBox.add(object);
+    await _favoritesObjectsBox.put(object.id, object);
+  }
+
+  Future<void> removeObjectFromFavorites(GeoObjectDto object) async {
+    await _favoritesObjectsBox.delete(object.id);
   }
 
   void _favoritesObjectsListener() {

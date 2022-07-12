@@ -6,6 +6,7 @@ part 'geo_object.freezed.dart';
 @freezed
 class GeoObject with _$GeoObject {
   const factory GeoObject.monument({
+    required String id,
     required List<String> images,
     required LatLng position,
     required String title,
@@ -15,6 +16,7 @@ class GeoObject with _$GeoObject {
   }) = Monument;
 
   const factory GeoObject.mountain({
+    required String id,
     required List<String> images,
     required LatLng position,
     required String title,

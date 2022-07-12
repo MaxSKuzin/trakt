@@ -7,12 +7,13 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import '../../domain/cubit/favorite_cubit.dart';
 import '../../domain/cubit/cache_cubit.dart';
 import '../../domain/cubit/cubit_extension.dart';
 import '../../injection.dart';
 import '../../domain/cubit/geo_objects_cubit.dart';
 import '../../generated/assets.gen.dart';
-import 'widget/geo_object_modal.dart';
+import '../design/geo_object_modal_widget.dart';
 
 import '../../domain/entity/geo_object.dart';
 import '../../logger.dart';
@@ -25,14 +26,21 @@ class MapWMImpl extends WidgetModel implements MapWM {
   final _tilesLoaded = ValueNotifier(false);
   bool _isInitialized = false;
   late StreamSubscription<GeoObjectsState> _objectsSubscription;
+  final FavoriteObjectsCubit _favoriteObjectsCubit;
 
   late MapboxMapController _controller;
 
   factory MapWMImpl.create(BuildContext context) {
-    return MapWMImpl._(context.read<GeoObjectsCubit>());
+    return MapWMImpl._(
+      context.read<GeoObjectsCubit>(),
+      context.read<FavoriteObjectsCubit>(),
+    );
   }
 
-  MapWMImpl._(this._geoObjectsCubit);
+  MapWMImpl._(
+    this._geoObjectsCubit,
+    this._favoriteObjectsCubit,
+  );
 
   @override
   void initWidgetModel() {
@@ -73,7 +81,8 @@ class MapWMImpl extends WidgetModel implements MapWM {
         }
         showBarModalBottomSheet(
           context: context,
-          builder: (context) => GeoObjectModal(
+          builder: (context) => GeoObjectModalWidget(
+            favoriteObjectsCubit: _favoriteObjectsCubit,
             item: item,
             onLatLngTap: null,
           ),

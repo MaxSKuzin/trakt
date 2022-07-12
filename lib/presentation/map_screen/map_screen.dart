@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:pmobi_mwwm/pmobi_mwwm.dart';
 
-import '../main_wrapper/main_wrapper.dart';
 import 'map_screen_wm.dart';
 
 class MapScreen extends PmWidget<MapWM, void> {
@@ -41,7 +40,7 @@ class MapScreen extends PmWidget<MapWM, void> {
           compassViewMargins: Point(wm.screenSize.width - 50, wm.viewPadding.top),
           logoViewMargins: const Point(
             10,
-            MainWrapper.bottomNavigationBarHeight + 50,
+            10,
           ),
           attributionButtonMargins: const Point(-10, -10),
           myLocationEnabled: true,
